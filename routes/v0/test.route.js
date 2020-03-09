@@ -8,7 +8,7 @@ router.use(function timeLog(req, res, next) {
 
 // define the about route
 router.get('/', function(req, res) {
-  res.send('test');
+  res.send('test-1');
 });
 
 module.exports = router;
