@@ -8,16 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const models_1 = require("../../models");
-const router = express_1.default.Router();
-router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const tasks = yield models_1.Task.findAll({ include: models_1.Task.user });
-    res.json(tasks);
-}));
-exports.default = router;
-//# sourceMappingURL=tasks.route.js.map
+const models_1 = require("../models");
+class Database {
+}
+exports.Database = Database;
+Database.syncModels = () => __awaiter(void 0, void 0, void 0, function* () {
+    yield models_1.User.sync({ force: true });
+    yield models_1.TaskList.sync({ force: true });
+    yield models_1.Task.sync({ force: true });
+});
+//# sourceMappingURL=database.service.js.map

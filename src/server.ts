@@ -1,12 +1,14 @@
 import express from 'express';
-import { Request, Response } from "express";
 import bodyParser from 'body-parser';
 import routes from './routes';
+import { Database } from './services';
+import { Task, User, TaskList } from './models';
+import session from 'express-session';
 
 export default class Server {
-    readonly port : number;
+    readonly port: number;
 
-    constructor(_port : number){
+    constructor(_port: number) {
         this.port = _port;
     }
 
@@ -14,20 +16,25 @@ export default class Server {
      * start
      * public method to start the current server using port class property
      */
-    public start = () : void => {
+    public start = async () => {
+        await Database.syncModels();
+        const user = await User.create({ firstName: 'Sébastien', lastName: 'Perrot' });
+        const taskList = await TaskList.create({ label: 'My Tasklist', user_id: user.id });
+        const task = await Task.create({ label: 'This is a task', user_id: user.id, task_list_id: taskList.get('id') });
         const app = express();
-        app.use(bodyParser.json());
 
+        app.use(session({
+            secret: 'keyboard cat',
+            resave: false,
+            saveUninitialized: true,
+            cookie: { secure: true }
+        }))
+
+        app.use(bodyParser.json());
         app.use('/api', routes);
 
-        app.get('/', (req : Request, res : Response) => {
-            res.send('Salut le monde');
-        });
-
         app.listen(this.port, () => {
-            console.info(`Server listening on port : ${ this.port }`);
+            console.info(`Server listening on port : ${this.port}`);
         });
     };
-
-
-}
+};
