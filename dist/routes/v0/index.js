@@ -12,7 +12,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const taskRouter = __importStar(require("./tasks.route"));
-router.use('/tasks', taskRouter.default);
+const passport_1 = __importDefault(require("passport"));
+const tasksRouter = __importStar(require("./tasks.route"));
+const usersRouter = __importStar(require("./users.route"));
+const authRouter = __importStar(require("./auth.route"));
+router.use('/auth', authRouter.default);
+router.use('/tasks', passport_1.default.authenticate('jwt', { session: false }), tasksRouter.default);
+router.use('/users', passport_1.default.authenticate('jwt', { session: false }), usersRouter.default);
 exports.default = router;
 //# sourceMappingURL=index.js.map

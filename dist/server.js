@@ -18,6 +18,7 @@ const routes_1 = __importDefault(require("./routes"));
 const services_1 = require("./services");
 const models_1 = require("./models");
 const express_session_1 = __importDefault(require("express-session"));
+require('./lib/auth/passport-jwt');
 class Server {
     constructor(_port) {
         /**
@@ -26,7 +27,7 @@ class Server {
          */
         this.start = () => __awaiter(this, void 0, void 0, function* () {
             yield services_1.Database.syncModels();
-            const user = yield models_1.User.create({ firstName: 'Sébastien', lastName: 'Perrot' });
+            const user = yield models_1.User.create({ firstName: 'Sébastien', lastName: 'Perrot', email: 'sebastien.perrot@saegus.com', password: 'test1234' });
             const taskList = yield models_1.TaskList.create({ label: 'My Tasklist', user_id: user.id });
             const task = yield models_1.Task.create({ label: 'This is a task', user_id: user.id, task_list_id: taskList.get('id') });
             const app = express_1.default();
